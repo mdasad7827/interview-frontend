@@ -10,6 +10,17 @@ function App() {
 
   const [formArr, setFormArr] = useState([]);
 
+  const [current, setCurrent] = useState(0);
+  const length = formArr.length;
+
+  const nextSlide = () => {
+    setCurrent(current === length - 1 ? 0 : current + 1);
+  };
+
+  const prevSlide = () => {
+    setCurrent(current === 0 ? length - 1 : current - 1);
+  };
+
   const submitHandler = (e) => {
     e.preventDefault();
     if (form.heading && form.content && form.url) {
@@ -30,12 +41,6 @@ function App() {
             url: "",
           });
         });
-      // formArr.push(form);
-      // setForm({
-      //   heading: "",
-      //   content: "",
-      //   url: "",
-      // });
     }
   };
 
@@ -51,17 +56,7 @@ function App() {
 
   const changeHandler = (e) => {
     setForm((form) => ({ ...form, [e.target.name]: e.target.value }));
-    // console.log(e);
-    // console.log(form);
   };
-
-  const slide = (heading, content, url) => (
-    <div className="card">
-      <h2>{heading}</h2>
-      <img src={`${url}`}></img>
-      <div className="content">{content}</div>
-    </div>
-  );
 
   return (
     <div className="App">
@@ -95,23 +90,25 @@ function App() {
         </form>
       </div>
       <div className="card-container">
-        {formArr.map((data, idx) => (
-          <div className="card" key={idx}>
-            <h2>{data.heading}</h2>
-            <img src={`${data.url}`}></img>
-            <div className="content">{data.content}</div>
-          </div>
-        ))}
-        {/* <div>
-          <button>{"<"}</button>
-          <div>
-            {formArr.map((data, idx) =>
-              slide(data.content, data.heading, data.url, idx)
-            )}
-            {slide(formArr[0].heading, formArr[0].content, formArr[0].url)}
-          </div>
-          <button>{">"}</button>
-        </div> */}
+        <button className="left-button" onClick={nextSlide}>
+          {"<"}
+        </button>
+        <button className="right-button" onClick={prevSlide}>
+          {">"}
+        </button>
+        {formArr.map((data, idx) => {
+          return (
+            <div className={current === idx ? "slide active" : "slide"}>
+              {idx === current && (
+                <div className="card" key={idx}>
+                  <h2>{data.heading}</h2>
+                  <img src={`${data.url}`} alt="re here"></img>
+                  <div className="content">{data.content}</div>
+                </div>
+              )}
+            </div>
+          );
+        })}
       </div>
     </div>
   );
